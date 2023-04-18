@@ -14,11 +14,11 @@ def is_win(intents, number):
     return number in intents
 
 
-def filter_transactions(bot: TeleBot, transactions, number):
+def filter_bettings(bot: TeleBot, bettings, number):
 
     win, error, = [], []
 
-    for tr in transactions:
+    for tr in bettings:
 
         if not tr['autorized']:
             
@@ -52,8 +52,6 @@ Dice Classic: x{config.DICE_MULTIPLIER}
 Tall and Bass: x{config.TALL_MULTIPLIER}
 
 DBomb: x{config.DBOMB_MULTIPLIER}'''
-
-    print(text)
 
     bot.send_dice(chat_id=config.CHANNEL_PUBLIC_URL, emoji='🎲')
     bot.send_message(chat_id=config.CHANNEL_PUBLIC_URL, text=text)
@@ -117,16 +115,8 @@ def submit_message_manager(bot: TeleBot, win, error):
     submit_message_pv(bot, dice, tall, dbomb, error)
     dice, tall, dbomb = '\n'.join(dice), '\n'.join(tall), '\n'.join(dbomb)
     
-    return f"""🏆Resultado🏆
-    *Dice Classic:*
-{dice}
-
-    *Tall and Bass:*
-{tall}
-
-    *DBomb:*
-{dbomb}
-"""
+    text = f"🏆Resultado🏆\n**Dice Classic:**\n{dice}\n\n**Tall and Bass:**\n{tall}\n\n**DBomb:**\n{dbomb}"
+    bot.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text)
 
 
 def async_game(bot: TeleBot):
@@ -137,7 +127,7 @@ def async_game(bot: TeleBot):
 
         time.sleep(1)        
 
-        if datetime.now().minute == 00:
+        if datetime.now().minute == 0:
 
             if not band:
 
@@ -145,11 +135,11 @@ def async_game(bot: TeleBot):
 
             band = False
 
-            transactions = db.get_transactions()
-            db.remove_all_transaction()
+            bettings = db.get_bettings()
+            db.remove_all_betting()
 
             number = random.randint(1,6)
-            win, error = filter_transactions(bot, transactions, number)
+            win, error = filter_bettings(bot, bettings, number)
 
             submit_message_channel(bot, win, number)
             submit_message_manager(bot, win, error)

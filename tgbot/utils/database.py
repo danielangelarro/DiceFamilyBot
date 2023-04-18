@@ -16,13 +16,18 @@ class DBManager:
             money MONEY,
             name TEXT)''')
         self.execute(
-            '''CREATE TABLE IF NOT EXISTS transactions
+            '''CREATE TABLE IF NOT EXISTS bettings
             (id INTEGER PRIMARY KEY,
             numbers TEXT,
             money FLOAT,
             game TEXT,
             autorized BOOLEAN,
             time TIMESTAMP,
+            user INTEGER  REFERENCES users(id))''')
+        self.execute(
+            '''CREATE TABLE IF NOT EXISTS deposites
+            (id INTEGER PRIMARY KEY,
+            money FLOAT,
             user INTEGER  REFERENCES users(id))''')
 
     def execute(self, statement: str, args=()) -> sqlite3.Cursor:
@@ -47,7 +52,7 @@ class DBManager:
         return user is not None
 
     def set_user(self, money: float, gid: int) -> None:
-        self.commit('SET money=? FROM users WHERE id=?', (money, gid))
+        self.commit('UPDATE users SET money=? WHERE id=?', (money, gid))
 
     def remove_user(self, gid: int) -> None:
         self.commit('DELETE FROM users WHERE id=?', (gid,))
@@ -65,32 +70,57 @@ class DBManager:
             'SELECT * FROM users').fetchall()
 
     
-    # ==== transaction =====
+    # ==== betting =====
 
-    def add_transaction(self, gid: int, numbers: str, money: float, game: str, time, user: int) -> None:
-        self.commit('INSERT INTO transactions VALUES (?,?,?,?,?,?,?)', (gid, numbers, money, game, False, time, user))
+    def add_betting(self, gid: int, numbers: str, money: float, game: str, time, user: int) -> None:
+        self.commit('INSERT INTO bettings VALUES (?,?,?,?,?,?,?)', (gid, numbers, money, game, False, time, user))
     
-    def remove_transaction(self, gid: int) -> None:
-        self.commit('DELETE FROM transactions WHERE id=?', (gid,))
+    def remove_betting(self, gid: int) -> None:
+        self.commit('DELETE FROM bettings WHERE id=?', (gid,))
         
-    def remove_all_transaction(self) -> None:
-        self.commit('DELETE FROM transactions')
+    def remove_all_betting(self) -> None:
+        self.commit('DELETE FROM bettings')
 
-    def set_transaction(self, gid: int) -> None:
-        self.commit('UPDATE transactions SET autorized=? WHERE id=?', (True, gid))
+    def set_betting(self, gid: int) -> None:
+        self.commit('UPDATE bettings SET autorized=? WHERE id=?', (True, gid))
 
-    def get_transaction_by_id(self, id: str) -> Optional[sqlite3.Row]:
+    def get_betting_by_id(self, id: str) -> Optional[sqlite3.Row]:
         return self.execute(
-            'SELECT * FROM transactions WHERE id=?', (id,)).fetchone()
+            'SELECT * FROM bettings WHERE id=?', (id,)).fetchone()
 
-    def get_transactions(self, user: int, game: str) -> Optional[sqlite3.Row]:
+    def get_bettings(self, user: int, game: str) -> Optional[sqlite3.Row]:
         return self.execute(
-            'SELECT * FROM transactions WHERE user=? AND game=?', (user, game)).fetchone()
+            'SELECT * FROM bettings WHERE user=? AND game=?', (user, game)).fetchone()
 
-    def get_transactions_by_user(self, user: int) -> List[sqlite3.Row]:
+    def get_bettings_by_user(self, user: int) -> List[sqlite3.Row]:
         return self.execute(
-            'SELECT * FROM transactions WHERE user=?', (user,)).fetchall()
+            'SELECT * FROM bettings WHERE user=?', (user,)).fetchall()
 
-    def get_transactions(self) -> List[sqlite3.Row]:
+    def get_bettings(self) -> List[sqlite3.Row]:
         return self.execute(
-            'SELECT * FROM transactions').fetchall()
+            'SELECT * FROM bettings').fetchall()
+
+
+    # ==== deposite =====
+
+    def add_deposite(self, gid: int, money: float, user: int) -> None:
+        self.commit('INSERT INTO deposites VALUES (?,?,?)', (gid, money, user))
+    
+    def remove_deposite(self, gid: int) -> None:
+        self.commit('DELETE FROM deposites WHERE id=?', (gid,))
+        
+    def remove_all_deposite(self) -> None:
+        self.commit('DELETE FROM deposites')
+
+    def get_deposite_by_id(self, id: str) -> Optional[sqlite3.Row]:
+        return self.execute(
+            'SELECT * FROM deposites WHERE id=?', (id,)).fetchone()
+
+    def get_deposites_by_user(self, user: int) -> List[sqlite3.Row]:
+        return self.execute(
+            'SELECT * FROM deposite WHERE user=?', (user,)).fetchall()
+
+    def get_deposites(self) -> List[sqlite3.Row]:
+        return self.execute(
+            'SELECT * FROM deposites').fetchall()
+

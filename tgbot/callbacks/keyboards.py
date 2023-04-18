@@ -84,8 +84,24 @@ def validate_keyboard():
         keyboard=[
             [
                 InlineKeyboardButton(
-                    text = 'Validar',
-                    callback_data = f'transaction-validate'
+                    text = '✅ Validar',
+                    callback_data = f'betting-validate'
+                )
+            ]
+        ]
+    )
+
+def validate_deposite_keyboard():
+    return InlineKeyboardMarkup(
+        keyboard=[
+            [
+                InlineKeyboardButton(
+                    text = '✅ Validar',
+                    callback_data = f'deposite-validate'
+                ),
+                InlineKeyboardButton(
+                    text = '❌ Rechazar',
+                    callback_data = f'deposite-cancel'
                 )
             ]
         ]

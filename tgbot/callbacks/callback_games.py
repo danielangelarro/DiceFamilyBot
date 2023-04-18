@@ -2,7 +2,7 @@ from telebot import TeleBot
 from telebot.types import Message, MessageEntity, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 import tgbot.config as config
-from tgbot.utils.transactions import GAMES, send_money, validate_transaction
+from tgbot.utils.transactions import GAMES, send_money, validate_betting
 from tgbot.callbacks.keyboards import dice_keyboard, tall_and_bass_keyboard, dbomb_keyboard, validate_keyboard
 
 
@@ -43,7 +43,7 @@ def autorized_transation_callback(call: CallbackQuery, bot: TeleBot):
     chat_id = call.message.chat.id
     message_id = call.message.message_id
 
-    validate_transaction(message_id)
+    validate_betting(message_id)
     bot.delete_message(chat_id=chat_id, message_id=message_id)
 
 
@@ -94,7 +94,7 @@ def process_betting_step(message: Message):
         money = float(message.text)
 
         text = '🎟 **BOLETO DICE** 🎟\n\n' \
-               f'👤 Usuario: [@{message.from_user.username}](tg://user?id={message.from_user.id})\n' \
+               f'👤 Usuario: @{message.from_user.username}\n' \
                f'🪪 Nombre: {message.from_user.full_name}\n' \
                f'🎲 Juego: {GAME}\n' \
                f'🔮 Prediccion: {NUMBER}\n' \
@@ -107,5 +107,5 @@ def process_betting_step(message: Message):
         BOT.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     except Exception as e:
-        print(e)
+
         BOT.reply_to(message, '⛔ Error de envío.')
