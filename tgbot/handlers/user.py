@@ -51,12 +51,12 @@ def handle_photo(message: Message, bot: TeleBot):
         photo_id = message.photo[-1].file_id
         money = message.caption
 
-        caption = '**Depósito**\n\n' \
+        caption = '\n\n' \
                 f'👤 Usuario: @{message.from_user.username}\n' \
                 f'🪪 Nombre: {message.from_user.full_name}\n' \
-                f'💰 Dinero: {money}\n'
+                f'💰 Dinero: ${money}\n'
 
-        bot.send_message(chat_id, f"Usted ha solicitado depositar ${caption}. SU cuenta sera confirmada.")
+        bot.send_message(chat_id, f"FORMULARIO DE DEPÓSITO. {caption}. SU cuenta sera confirmada.")
         msg = bot.send_photo(chat_id=config.CHANNEL_PRIVATE_URL, photo=photo_id, caption=caption, 
                     parse_mode='Markdown', reply_markup=validate_deposite_keyboard())
         
