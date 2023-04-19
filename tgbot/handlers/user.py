@@ -38,7 +38,8 @@ def my_account(message: Message, bot: TeleBot):
 def deposite_cash(message: Message, bot: TeleBot):
 
     chat_id = message.chat.id
-    text = 'Envie una captura 🖼 de su transferencia y en la descripcion de la imagen coloque la cantidad a depositar.'
+    text = 'Envie una captura 🖼 de su transferencia y en la descripcion de la imagen coloque la cantidad a depositar.\n' \
+            f'\n💳 Tarjeta a depositar: {config.TARJECT_CUP}'
 
     bot.send_message(chat_id=chat_id, text=text)
 
@@ -54,7 +55,7 @@ def handle_photo(message: Message, bot: TeleBot):
         caption = '\n\n' \
                 f'👤 Usuario: @{message.from_user.username}\n' \
                 f'🪪 Nombre: {message.from_user.full_name}\n' \
-                f'💰 Dinero: ${money}\n'
+                f'💰 Dinero: {money}\n'
 
         bot.send_message(chat_id, f"FORMULARIO DE DEPÓSITO. {caption}. SU cuenta sera confirmada.")
         msg = bot.send_photo(chat_id=config.CHANNEL_PRIVATE_URL, photo=photo_id, caption=caption, 

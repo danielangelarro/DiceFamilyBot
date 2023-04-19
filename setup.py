@@ -1,12 +1,13 @@
 from setuptools import setup, find_packages
 from tgbot.config import *
 
+f = open('README.md', 'r')
 
 setup(
-    name = __name__,
-    version = __version__,
+    name = 'DiceFamilyBot',
+    version = '1.0',
     description = 'Bot de Apuestas',
-    long_description = read('README.md'),
+    long_description = f.read(),
     long_description_content_type = "text/markdown",
     author = 'danielangelarro',
     author_email = 'danielangelarro@gmail.com',

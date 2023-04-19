@@ -25,11 +25,12 @@ def send_money(gid: int, user: int, number: int, money: float, game: str):
 
     time = datetime.now()
 
+    user_db = db.get_user_by_id(user)
+
+    new_money = user_db['money'] - money
+
+    db.set_user(new_money, user)
     db.add_betting(gid, parse_numbers(number, game), money, game, time, user)
-
-def validate_betting(betting_id: int):
-
-    db.set_betting(betting_id)
 
 def send_deposite(gid: int, money: float, user: int):
 
@@ -37,7 +38,12 @@ def send_deposite(gid: int, money: float, user: int):
 
 def remove_deposite(gid: int):
 
+    deposite = db.get_deposite_by_id(gid)
+    user = db.get_user_by_id(deposite['user'])
+
     db.remove_deposite(gid)
+
+    return user
 
 def accepted_deposite(gid: int):
     

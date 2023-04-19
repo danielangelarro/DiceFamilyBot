@@ -21,7 +21,6 @@ class DBManager:
             numbers TEXT,
             money FLOAT,
             game TEXT,
-            autorized BOOLEAN,
             time TIMESTAMP,
             user INTEGER  REFERENCES users(id))''')
         self.execute(
@@ -73,16 +72,13 @@ class DBManager:
     # ==== betting =====
 
     def add_betting(self, gid: int, numbers: str, money: float, game: str, time, user: int) -> None:
-        self.commit('INSERT INTO bettings VALUES (?,?,?,?,?,?,?)', (gid, numbers, money, game, False, time, user))
+        self.commit('INSERT INTO bettings VALUES (?,?,?,?,?,?)', (gid, numbers, money, game, time, user))
     
     def remove_betting(self, gid: int) -> None:
         self.commit('DELETE FROM bettings WHERE id=?', (gid,))
         
     def remove_all_betting(self) -> None:
         self.commit('DELETE FROM bettings')
-
-    def set_betting(self, gid: int) -> None:
-        self.commit('UPDATE bettings SET autorized=? WHERE id=?', (True, gid))
 
     def get_betting_by_id(self, id: str) -> Optional[sqlite3.Row]:
         return self.execute(

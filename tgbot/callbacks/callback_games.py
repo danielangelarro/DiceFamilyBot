@@ -2,8 +2,8 @@ from telebot import TeleBot
 from telebot.types import Message, MessageEntity, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 import tgbot.config as config
-from tgbot.utils.transactions import GAMES, send_money, validate_betting
-from tgbot.callbacks.keyboards import dice_keyboard, tall_and_bass_keyboard, dbomb_keyboard, validate_keyboard
+from tgbot.utils.transactions import GAMES, send_money, get_money
+from tgbot.callbacks.keyboards import dice_keyboard, tall_and_bass_keyboard, dbomb_keyboard
 
 
 BOT = None
@@ -28,23 +28,8 @@ def select_game_callback(call: CallbackQuery, bot: TeleBot):
     elif game == GAMES[2]:
 
         bot.send_message(chat_id=call.message.chat.id, text=text, reply_markup=dbomb_keyboard(), parse_mode='Markdown')
-    
 
-def cancel_betting_callback(call: CallbackQuery, bot: TeleBot):
-
-    chat_id = call.message.chat.id
-    message_id = call.message.message_id
-
-    bot.delete_message(chat_id=chat_id, message_id=message_id)
-
-
-def autorized_transation_callback(call: CallbackQuery, bot: TeleBot):
-
-    chat_id = call.message.chat.id
-    message_id = call.message.message_id
-
-    validate_betting(message_id)
-    bot.delete_message(chat_id=chat_id, message_id=message_id)
+    bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
 
 
 def dice_callback(call: CallbackQuery, bot: TeleBot):
@@ -57,6 +42,8 @@ def dice_callback(call: CallbackQuery, bot: TeleBot):
     bot.send_message(call.message.chat.id, '**Introduzca la cantidad de dinero a apostar:**', parse_mode='Markdown')
     bot.register_next_step_handler(call.message, process_betting_step)
 
+    bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+
 
 def tall_and_bass_callback(call: CallbackQuery, bot: TeleBot):
 
@@ -68,6 +55,8 @@ def tall_and_bass_callback(call: CallbackQuery, bot: TeleBot):
     bot.send_message(call.message.chat.id, '**Introduzca la cantidad de dinero a apostar:**', parse_mode='Markdown')
     bot.register_next_step_handler(call.message, process_betting_step)
 
+    bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+
 
 def dbomb_callback(call: CallbackQuery, bot: TeleBot):
 
@@ -78,8 +67,8 @@ def dbomb_callback(call: CallbackQuery, bot: TeleBot):
 
     bot.send_message(call.message.chat.id, '**Introduzca la cantidad de dinero a apostar:**', parse_mode='Markdown')
     bot.register_next_step_handler(call.message, process_betting_step)
-    
-    cancel_betting_callback(call, bot)
+
+    bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
 
 
 def process_betting_step(message: Message):
@@ -91,21 +80,29 @@ def process_betting_step(message: Message):
         user = message.from_user.id
         chat_id = message.chat.id
         message_id = message.message_id
+
         money = float(message.text)
+        money_db = get_money(user)
+
+
+        if money <= 0 or money > money_db:
+            
+            raise ValueError('Cantidad de dinero a apostar inválida.')
 
         text = '🎟 **BOLETO DICE** 🎟\n\n' \
                f'👤 Usuario: @{message.from_user.username}\n' \
                f'🪪 Nombre: {message.from_user.full_name}\n' \
                f'🎲 Juego: {GAME}\n' \
                f'🔮 Prediccion: {NUMBER}\n' \
-               f'💰 Dinero: {money}\n'
+               f'💰 Dinero: {money}\n\n#predict'
 
         send_money(message_id, user, NUMBER, money, GAME)
         
-        BOT.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text, parse_mode='Markdown', reply_markup=validate_keyboard())
-        BOT.send_message(chat_id=chat_id, text='⏳ Su solicitud está a la espera de confirmación por el administrador.')
+        BOT.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text, parse_mode='Markdown')
+        BOT.send_message(chat_id=chat_id, text=text)
         BOT.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
     except Exception as e:
 
+        print(e)
         BOT.reply_to(message, '⛔ Error de envío.')

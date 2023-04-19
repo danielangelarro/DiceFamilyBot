@@ -1,6 +1,6 @@
 from telebot.custom_filters import SimpleCustomFilter
 from tgbot.models.users_model import Admin
-from tgbot.utils.transactions import GAMES
+from tgbot.utils.bettings import GAMES
 
 
 class GameFilter(SimpleCustomFilter):

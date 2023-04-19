@@ -1,6 +1,6 @@
 from telebot import TeleBot
-from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
-from tgbot.utils.transactions import validate_transaction, register_user
+from telebot.types import Message
+from tgbot.utils.transactions import register_user
 
     
 def admin_user(message: Message, bot: TeleBot):
@@ -9,16 +9,45 @@ def admin_user(message: Message, bot: TeleBot):
     bot.send_message(message.chat.id, "Hello, admin!")
 
 
-def validate_transaction_by_admin(message: Message, bot: TeleBot):
-    
-    chat_id = message.chat.id
-    message_id = message.id
-    
-    msg = [line.split(':') for line in message.text.split('\n')]
-    ID, USER, GAME, MONEY, TIME = [data[1].strip() for data in msg[1:]]
+def groups_info_admin(message: Message, bot: TeleBot):
 
-    validate_transaction(ID)
-    text = f'**Se ha aceptado su apuesta.**\n\nJuego: {GAME}\nCantidad: {MONEY}\nHora: {TIME}'
+    # ID del canal que quieres obtener
+    channel_id = "@BoletosDice"
 
-    bot.delete_message(chat_id, message_id)
-    bot.send_message(USER, text, parse_mode='Markdown')
+    # Utiliza el método get_chat para obtener la información del canal
+    channel_info = bot.get_chat(channel_id)
+
+    # Imprime la información del canal
+    text =  f'ID del canal: {channel_info.id}\n' \
+            f'Nombre del canal: {channel_info.title}\n' \
+            f'Descripción del canal: {channel_info.description}'
+
+    bot.send_message(message.chat.id, text=text)
+    bot.send_message(channel_id, "Hola, ¡soy un nuevo miembro del canal!")
+
+
+    # # Utiliza el método get_chat_member para obtener información sobre el bot en el canal
+    # bot_info = bot.get_chat_member(channel_id, bot.)
+
+    # # Utiliza el método promote_chat_member para darle al bot permisos de administrador en el canal
+    # bot.promote_chat_member(
+    #     channel_id, bot_info.user.id, 
+    #     can_change_info=True, 
+    #     can_post_messages=True, 
+    #     can_edit_messages=True, 
+    #     can_delete_messages=True, 
+    #     can_invite_users=True, 
+    #     can_restrict_members=True, 
+    #     can_pin_messages=True, 
+    #     can_promote_members=False
+    # )
+    # # Envia un mensaje al canal
+
+
+def info_messaje_by_admin(message: Message, bot: TeleBot):
+
+    text = str(message)
+    text = text.replace(',', '\n')
+    
+    bot.reply_to(message, text)
+    bot.send_sticker(chat_id=message.chat.id, sticker='CAACAgIAAxkBAAPMZEA03cwetuxrTS20VEwFc117CNMAApEDAAIvD_AGA79Grv8Gf-8vBA')
