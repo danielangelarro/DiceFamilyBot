@@ -106,3 +106,19 @@ def validate_deposite_keyboard():
             ]
         ]
     )
+
+def validate_retire_keyboard():
+    return InlineKeyboardMarkup(
+        keyboard=[
+            [
+                InlineKeyboardButton(
+                    text = '✅ Validar',
+                    callback_data = f'retire-validate'
+                ),
+                InlineKeyboardButton(
+                    text = '❌ Rechazar',
+                    callback_data = f'retire-cancel'
+                )
+            ]
+        ]
+    )

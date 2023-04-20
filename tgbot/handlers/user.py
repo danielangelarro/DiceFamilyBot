@@ -57,7 +57,7 @@ def handle_photo(message: Message, bot: TeleBot):
                 f'🪪 Nombre: {message.from_user.full_name}\n' \
                 f'💰 Dinero: {money}\n'
 
-        bot.send_message(chat_id, f"FORMULARIO DE DEPÓSITO. {caption}. SU cuenta sera confirmada.")
+        bot.send_message(chat_id, f"FORMULARIO DE DEPÓSITO. {caption}")
         msg = bot.send_photo(chat_id=config.CHANNEL_PRIVATE_URL, photo=photo_id, caption=caption, 
                     parse_mode='Markdown', reply_markup=validate_deposite_keyboard())
         
