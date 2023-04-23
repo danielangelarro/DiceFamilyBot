@@ -96,9 +96,9 @@ def process_betting_step(message: Message):
                f'🔮 Prediccion: {NUMBER}\n' \
                f'💰 Dinero: {money}\n\n#predict'
 
-        send_money(message_id, user, NUMBER, money, GAME)
+        msg = BOT.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text, parse_mode='Markdown')
+        send_money(msg.message_id, user, NUMBER, money, GAME)
         
-        BOT.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text, parse_mode='Markdown')
         BOT.send_message(chat_id=chat_id, text=text)
         BOT.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
