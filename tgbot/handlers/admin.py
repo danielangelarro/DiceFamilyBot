@@ -1,12 +1,23 @@
 from telebot import TeleBot
 from telebot.types import Message
 from tgbot.utils.transactions import register_user
+from tgbot.callbacks.reply_keyboard import reply_main_keyboard
+from tgbot.utils.validators import validate_join_channel
 
     
 def admin_user(message: Message, bot: TeleBot):
-    
+
     register_user(message.from_user)
-    bot.send_message(message.chat.id, "Hello, admin!")
+
+    text =  f'¡Bienvenido @{message.from_user.username} al Bot del Proyecto Dice! 🎲\n\n' \
+            '😁¡Apostemos y divirtámonos!\n\n' \
+            'Selecciona uno de nuestros tres juegos:\n' \
+            '🎲 Dice Classic: adivina el número del dado.\n\n' \
+            '📈 Tall & Bass: predice si el número será alto o bajo.\n\n' \
+            '💣 DBomb: elige el dado que no saldrá.\n\n\n' \
+            '¡Buena suerte!🍀'
+
+    bot.send_message(message.chat.id, text, reply_markup=reply_main_keyboard())
 
 
 def groups_info_admin(message: Message, bot: TeleBot):
@@ -49,5 +60,7 @@ def info_messaje_by_admin(message: Message, bot: TeleBot):
     text = str(message)
     text = text.replace(',', '\n')
     
-    bot.reply_to(message, text)
-    bot.send_sticker(chat_id=message.chat.id, sticker='CAACAgIAAxkBAAPMZEA03cwetuxrTS20VEwFc117CNMAApEDAAIvD_AGA79Grv8Gf-8vBA')
+    # user = message.from_user
+
+    bot.reply_to(message, message.sticker.file_id)
+    # bot.send_sticker(chat_id=message.chat.id, sticker='CAACAgIAAxkBAAPMZEA03cwetuxrTS20VEwFc117CNMAApEDAAIvD_AGA79Grv8Gf-8vBA')
