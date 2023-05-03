@@ -22,7 +22,7 @@ def any_user(message: Message, bot: TeleBot):
             '💣 DBomb: elige el dado que no saldrá.\n\n\n' \
             '¡Buena suerte!🍀'
 
-    bot.send_message(message.chat.id, text=text, reply_markup=reply_main_keyboard)
+    bot.send_message(message.chat.id, text=text, reply_markup=reply_main_keyboard())
 
 
 def betting(message: Message, bot: TeleBot):
@@ -61,17 +61,25 @@ def deposite_cash(message: Message, bot: TeleBot):
 def support(message: Message, bot: TeleBot):
 
     chat_id = message.chat.id
-    text = 'Escriba'
+    text = 'Redacte un breve ensaje explicando su situacion a los administradores:'
 
     bot.send_message(chat_id=chat_id, text=text)
+    bot.register_next_step_handler(message, support_step, bot)
 
 
 def termine_and_conditions(message: Message, bot: TeleBot):
     chat_id = message.chat.id
-    text = 'Envie una captura 🖼 de su transferencia y en la descripcion de la imagen coloque la cantidad a depositar.\n' \
-            f'\n💳 Tarjeta a depositar: {config.TARJECT_CUP}'
+    text = 'TERMINE Y SERVICES'
 
     bot.send_message(chat_id=chat_id, text=text)
+
+
+def support_step(message: Message, bot: TeleBot):
+    
+    text = f'MENSAJE A SOPORTE DE @{message.from_user.username}\n\n\"{message.text}\"'
+
+    bot.send_message(config.CHANNEL_PRIVATE_URL, text)
+    bot.send_message(message.chat.id, 'Su mensje se ha enviado correctamente a los administradores.')
 
 
 def handle_photo(message: Message, bot: TeleBot):
@@ -89,7 +97,7 @@ def handle_photo(message: Message, bot: TeleBot):
 
         bot.send_message(chat_id, f"FORMULARIO DE DEPÓSITO. {caption}")
         msg = bot.send_photo(chat_id=config.CHANNEL_PRIVATE_URL, photo=photo_id, caption=caption, 
-                    parse_mode='Markdown', reply_markup=validate_deposite_keyboard())
+                    reply_markup=validate_deposite_keyboard())
         
         send_deposite(msg.message_id, float(money), user_id)
     

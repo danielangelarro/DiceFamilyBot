@@ -73,17 +73,17 @@ def phone_step(message: Message, bot: TeleBot, db_user: dict):
         chat_id = message.chat.id
         db_user['phone'] = message.text
 
-        plantilla = "🎟 *SOLICITUD RETIRO* 🎟\n\n" \
+        plantilla = "🎟 SOLICITUD RETIRO 🎟\n\n" \
                     f"👤 Usuario: @{db_user['name']}\n" \
                     f"💳 Tarjeta: {db_user['tarject']}\n" \
                     f"📱 Teléfono: {db_user['phone']}\n" \
                     f"💰 Cantidad: {db_user['money']}\n\n" \
 
         bot.delete_message(chat_id=chat_id, message_id=message.message_id)
-        bot.edit_message_text(chat_id=message.chat.id, message_id=db_user['msg'], text=plantilla, parse_mode='Markdown')
+        bot.edit_message_text(chat_id=message.chat.id, message_id=db_user['msg'], text=plantilla)
 
         msg = bot.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=plantilla,
-                        parse_mode='Markdown', reply_markup=validate_retire_keyboard())
+                        parse_mode='MarkdownV2', reply_markup=validate_retire_keyboard())
         
         send_deposite(msg.message_id, db_user['money'], message.from_user.id)
     

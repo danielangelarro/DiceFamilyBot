@@ -61,14 +61,14 @@ DBomb: x{config.DBOMB_MULTIPLIER}'''
 def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
 
     for w in dice:
-        user = db.get_user_by_id(w['user'])
+        user = db.get_user_by_id(int(w['user']))
 
         money = float(w['money'] * config.DICE_MULTIPLIER)
         db.set_user(money, user['id'])
 
-        text = f"❇️ Usted ha ganado. ❇️\n*Juego:* Dice Clasic\n*Dinero:* {money}"
+        text = f"❇️ Usted ha ganado. ❇️\n**Juego:** Dice Clasic\n**Dinero:** {money}"
         bot.send_sticker(chat_id=user['id'], sticker='CAACAgIAAxkBAAICdGRJx0BzHx-ky4PssiLcfkiDOWmfAAIEAAMWbkwSE2542Pp1ZN0vBA')
-        bot.send_message(chat_id=user['id'], text=text, parse_mode='Markdown')
+        bot.send_message(chat_id=user['id'], text=text)
     
     for w in tall:
         user = db.get_user_by_id(w['user'])
@@ -76,9 +76,9 @@ def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
         money = float(w['money'] * config.DICE_MULTIPLIER)
         db.set_user(money, user['id'])
 
-        text = f"❇️ Usted ha ganado. ❇️\n*Juego:* Tall and Bass\n*Dinero:* {money}"
+        text = f"❇️ Usted ha ganado. ❇️\n*Juego:** Tall and Bass\n*Dinero:** {money}"
         bot.send_sticker(chat_id=user['id'], sticker='CAACAgIAAxkBAAPMZEA03cwetuxrTS20VEwFc117CNMAApEDAAIvD_AGA79Grv8Gf-8vBA')
-        bot.send_message(chat_id=user['id'], text=text, parse_mode='Markdown')
+        bot.send_message(chat_id=user['id'], text=text)
     
     for w in dbomb:
         user = db.get_user_by_id(w['user'])
@@ -86,43 +86,47 @@ def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
         money = float(w['money'] * config.DICE_MULTIPLIER)
         db.set_user(money, user['id'])
 
-        text = f"❇️ Usted ha ganado. ❇️\n*Juego:* DBomb\n*Dinero:* {money}"
+        text = f"❇️ Usted ha ganado. ❇️\n**Juego:** DBomb\n**Dinero:** {money}"
         bot.send_sticker(chat_id=user['id'], sticker='CAACAgIAAxkBAAPMZEA03cwetuxrTS20VEwFc117CNMAApEDAAIvD_AGA79Grv8Gf-8vBA')
-        bot.send_message(chat_id=user['id'], text=text, parse_mode='Markdown')
+        bot.send_message(chat_id=user['id'], text=text)
 
     for w in error:
         user = db.get_user_by_id(w['user'])
         text = 'Lo sentimos. Suerte para la próxima.'
-        bot.send_message(chat_id=user['id'], text=text, parse_mode='Markdown')
+        bot.send_message(chat_id=user['id'], text=text, parse_mode='MarkdownV2')
 
 
 def submit_message_manager(bot: TeleBot, win, error):
 
     dice, tall, dbomb = [], [], []
+    dice_db, tall_db, dbomb_db = [], [], []
 
     for w in win:
 
         user = db.get_user_by_id(w['user'])
 
         if w['game'] == GAMES[0]:
-
+            
+            dice_db.append(w)
             dice.append(f"{user['user']} - {user['name']} - ${user['money']}")
         
         elif w['game'] == GAMES[1]:
 
-            dice.append(f"{user['user']} - {user['name']} - ${user['money']}")
+            tall_db.append(w)
+            tall.append(f"{user['user']} - {user['name']} - ${user['money']}")
         
         else:
 
-            dice.append(f"{user['user']} - {user['name']} - ${user['money']}")
+            dbomb_db.append(w)
+            dbomb.append(f"{user['user']} - {user['name']} - ${user['money']}")
     
-    submit_message_pv(bot, dice, tall, dbomb, error)
+    submit_message_pv(bot, dice_db, tall_db, dbomb_db, error)
     
     dice = 'Empty' if len(dice) == 0 else '\n'.join(dice),
     tall = 'Empty' if len(tall) == 0 else '\n'.join(tall)
     dbomb = 'Empty' if len(dbomb) == 0 else '\n'.join(dbomb)
     
-    text = f"🏆Resultado🏆\n**Dice Classic:**\n{dice}\n\n**Tall and Bass:**\n{tall}\n\n**DBomb:**\n{dbomb}"
+    text = f"🏆Resultado🏆\nDICE CLASSIC:\n{dice}\n\nTALL AND BASS:**\n{tall}\n\n**DBOMB:**\n{dbomb}"
     bot.send_message(chat_id=config.CHANNEL_PRIVATE_URL, text=text)
 
 
@@ -134,7 +138,7 @@ def async_game(bot: TeleBot):
 
         time.sleep(1)        
 
-        if datetime.now().minute == 0:
+        if datetime.now().minute == 33:
 
             if not band:
 
