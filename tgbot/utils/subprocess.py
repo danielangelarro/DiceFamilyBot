@@ -138,7 +138,7 @@ def async_game(bot: TeleBot):
 
         time.sleep(1)        
 
-        if datetime.now().minute == 33:
+        if datetime.now().minute == 0:
 
             if not band:
 

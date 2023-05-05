@@ -69,14 +69,51 @@ def support(message: Message, bot: TeleBot):
 
 def termine_and_conditions(message: Message, bot: TeleBot):
     chat_id = message.chat.id
-    text = 'TERMINE Y SERVICES'
+    text = '''Términos y Condiciones
+
+Los presentes términos y condiciones rigen el uso y la participación en el juego de casino de dados de Telegram (el “Juego”). Estos términos y condiciones son acuerdos legales entre usted (el “Usuario”) y los creadores del Juego (el “Organizador”).
+
+Al participar en el Juego, el Usuario acepta cumplir con los términos y condiciones aquí establecidos. El Organizador se reserva el derecho a cambiar estos términos y condiciones en cualquier momento sin previo aviso.
+
+1. Seguridad de los datos
+
+El Organizador se compromete a garantizar la seguridad de los datos de sus usuarios. Esto incluye su información personal y financiera. Esta información se gestiona en un entorno seguro y está protegida por un firewall adecuado.
+
+2. Transacciones seguras
+
+El Organizador se compromete a proporcionar transacciones seguras para que los usuarios realicen sus pagos. Cada una de estas transacciones se realiza por medio de una plataforma certificada para evitar el fraude.
+
+3. Cumplimiento de la ley
+
+El Organizador se compromete a cumplir con la legislación y regulaciones aplicables y apropiadas.
+
+4. Protección y uso justo de los datos personales
+
+El Organizador se compromete a proteger los datos personales de sus usuarios y a garantizar que estos serán únicamente utilizados para los fines para los cuáles fueron recopilados.
+
+5. Protección de los usuarios
+
+El Organizador se compromete a proteger a sus usuarios de la manipulación basada en la corrupción. El Organizador no tolerará el uso de programas no autorizados o la manipulación de los resultados del Juego con algún tipo de finalidad fraudulenta.
+
+6. Limitación de responsabilidad
+
+El Organizador se compromete a cubrir cualquier responsabilidad resultante de la falla en conducción del Juego, como el uso indebido de los sistemas informáticos, la corrupción de los resultados del Juego, el fraude de parte de los usuarios, etc.
+
+7. Fraude
+
+El Organizador se reserva el derecho de tomar acciones legales contra los usuarios que hayan cometido, sean acusados ​​de haber cometido, o sean sospechosos de haber cometido actividades fraudulentas, como el comportamiento abusivo, la manipulación de los resultados del Juego, la violación de las leyes locales, la falta de respeto a la moralidad o el bienestar general de los demás usuarios, etc.
+
+8. Discreción
+
+El Organizador se compromete a garantizar que todos los datos de los usuarios sean tratados con la máxima discreción.
+    '''
 
     bot.send_message(chat_id=chat_id, text=text)
 
 
 def support_step(message: Message, bot: TeleBot):
     
-    text = f'MENSAJE A SOPORTE DE @{message.from_user.username}\n\n\"{message.text}\"'
+    text = f'💬 **MENSAJE A SOPORTE** 💬\n\n👤: @{message.from_user.username}\n\n\"{message.text}\"'
 
     bot.send_message(config.CHANNEL_PRIVATE_URL, text)
     bot.send_message(message.chat.id, 'Su mensje se ha enviado correctamente a los administradores.')
