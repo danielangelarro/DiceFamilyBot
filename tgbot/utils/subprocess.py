@@ -63,7 +63,7 @@ def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
     for w in dice:
         user = db.get_user_by_id(int(w['user']))
 
-        money = float(w['money'] * config.DICE_MULTIPLIER)
+        money = user['money'] + float(w['money'] * config.DICE_MULTIPLIER)
         db.set_user(money, user['id'])
 
         text = f"❇️ Usted ha ganado. ❇️\n**Juego:** Dice Clasic\n**Dinero:** {money}"
@@ -73,7 +73,7 @@ def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
     for w in tall:
         user = db.get_user_by_id(w['user'])
 
-        money = float(w['money'] * config.DICE_MULTIPLIER)
+        money = user['money'] + float(w['money'] * config.TALL_MULTIPLIER)
         db.set_user(money, user['id'])
 
         text = f"❇️ Usted ha ganado. ❇️\n*Juego:** Tall and Bass\n*Dinero:** {money}"
@@ -83,7 +83,7 @@ def submit_message_pv(bot: TeleBot, dice, tall, dbomb, error):
     for w in dbomb:
         user = db.get_user_by_id(w['user'])
 
-        money = float(w['money'] * config.DICE_MULTIPLIER)
+        money = user['money'] + float(w['money'] * config.DBOMB_MULTIPLIER)
         db.set_user(money, user['id'])
 
         text = f"❇️ Usted ha ganado. ❇️\n**Juego:** DBomb\n**Dinero:** {money}"
